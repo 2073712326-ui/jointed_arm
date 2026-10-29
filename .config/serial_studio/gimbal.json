@@ -1,0 +1,199 @@
+{
+    "frameEnd": "",
+    "frameParser": "/* \n * @brief Frame parsing function, you can modify this to suit your needs.\n * \n * By customizing this code, you can use a single JSON project file to \n * process different kinds of frames that are sent by the microcontroller \n * or any data source that is connected to Serial Studio. Frame parsing code\n * is specific to every JSON project that you create.\n *\n * @param frame      string with the latest received frame.\n * @param separator  data separator sequence defined by the JSON project.\n *\n * @note.            only data that is *inside* the data delimiters will\n *                   be processed by the frame parser.\n *\n * @note             you can safely declare global variables outside the\n *                   @c parse() function.\n */\nfunction parse(frame, separator) {\n    return frame.split(separator);\n}",
+    "frameStart": "",
+    "groups": [
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "time",
+                    "units": "s",
+                    "value": "%1",
+                    "widget": ""
+                }
+            ],
+            "title": "time",
+            "widget": ""
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ref",
+                    "units": "°",
+                    "value": "%2",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "fdb",
+                    "units": "°",
+                    "value": "%3",
+                    "widget": ""
+                }
+            ],
+            "title": "yaw",
+            "widget": "multiplot"
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ref",
+                    "units": "°",
+                    "value": "%4",
+                    "widget": "x"
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "fdb",
+                    "units": "°",
+                    "value": "%5",
+                    "widget": "y"
+                }
+            ],
+            "title": "pitch",
+            "widget": "multiplot"
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ref",
+                    "units": "°/s",
+                    "value": "%6",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ref",
+                    "units": "°/s",
+                    "value": "%7",
+                    "widget": ""
+                }
+            ],
+            "title": "yaw speed",
+            "widget": "multiplot"
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ref",
+                    "units": "°",
+                    "value": "%8",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "fdb",
+                    "units": "°",
+                    "value": "%9",
+                    "widget": ""
+                }
+            ],
+            "title": "pitch_speed",
+            "widget": "multiplot"
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "yaw",
+                    "units": "",
+                    "value": "%10",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "pitch",
+                    "units": "",
+                    "value": "%11",
+                    "widget": ""
+                }
+            ],
+            "title": "intensity",
+            "widget": "multiplot"
+        }
+    ],
+    "separator": "",
+    "title": "gimbal"
+}

@@ -1,0 +1,283 @@
+{
+    "frameEnd": "",
+    "frameParser": "/* \n * @brief Frame parsing function, you can modify this to suit your needs.\n * \n * By customizing this code, you can use a single JSON project file to \n * process different kinds of frames that are sent by the microcontroller \n * or any data source that is connected to Serial Studio. Frame parsing code\n * is specific to every JSON project that you create.\n *\n * @param frame      string with the latest received frame.\n * @param separator  data separator sequence defined by the JSON project.\n *\n * @note.            only data that is *inside* the data delimiters will\n *                   be processed by the frame parser.\n *\n * @note             you can safely declare global variables outside the\n *                   @c parse() function.\n */\nfunction parse(frame, separator) {\n    return frame.split(separator);\n}",
+    "frameStart": "",
+    "groups": [
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "time",
+                    "units": "s",
+                    "value": "%1",
+                    "widget": ""
+                }
+            ],
+            "title": "time",
+            "widget": ""
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "yaw",
+                    "units": "°",
+                    "value": "%2",
+                    "widget": "roll"
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "pitch",
+                    "units": "°",
+                    "value": "%3",
+                    "widget": "pitch"
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "roll",
+                    "units": "°",
+                    "value": "%4",
+                    "widget": "yaw"
+                }
+            ],
+            "title": "RPY",
+            "widget": "multiplot"
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ωx",
+                    "units": "rad/s",
+                    "value": "%5",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ωy",
+                    "units": "rad/s",
+                    "value": "%6",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ωz",
+                    "units": "rad/s",
+                    "value": "%7",
+                    "widget": ""
+                }
+            ],
+            "title": "gyro",
+            "widget": "multiplot"
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ax",
+                    "units": "m/s²",
+                    "value": "%8",
+                    "widget": "x"
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ay",
+                    "units": "m/s²",
+                    "value": "%9",
+                    "widget": "y"
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "az",
+                    "units": "m/s²",
+                    "value": "%10",
+                    "widget": "z"
+                }
+            ],
+            "title": "accelerometer(sensor)",
+            "widget": "multiplot"
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ax",
+                    "units": "m/s²",
+                    "value": "%11",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "ay",
+                    "units": "m/s²",
+                    "value": "%12",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "az",
+                    "units": "m/s²",
+                    "value": "%13",
+                    "widget": ""
+                }
+            ],
+            "title": "acceleration(world)",
+            "widget": "multiplot"
+        },
+        {
+            "datasets": [
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "q0",
+                    "units": "",
+                    "value": "%14",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "q1",
+                    "units": "",
+                    "value": "%15",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "q2",
+                    "units": "",
+                    "value": "%16",
+                    "widget": ""
+                },
+                {
+                    "alarm": 0,
+                    "fft": false,
+                    "fftSamples": 1024,
+                    "graph": false,
+                    "led": false,
+                    "log": false,
+                    "max": 0,
+                    "min": 0,
+                    "title": "q3",
+                    "units": "",
+                    "value": "%17",
+                    "widget": ""
+                }
+            ],
+            "title": "quaternion",
+            "widget": "multiplot"
+        }
+    ],
+    "separator": "",
+    "title": "imu"
+}

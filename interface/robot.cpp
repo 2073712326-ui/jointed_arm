@@ -42,21 +42,23 @@ Arm arm(J0, J1, arm_limits, arm_feedforward);
 
 /* FreeRTOS tasks-----------------------------------------------------------*/
 osThreadId controlTaskHandle;
+//算出应该发送的电机输出
 void controlTask(void const* argument) {
-  allMotorsInit();
-  controlInit();
-  rc.init();
+  allMotorsInit();//配置电机ID、重置控制器、设置反馈来源
+  controlInit();//配置遥控串口和应用初始状态
+  rc.init();//启动遥控数据接受
   uint32_t tick = osKernelSysTick();
   for (;;) {
-    rc.handle();
-    controlLoop();
-    allMotorsHandle();
-    osDelayUntil(&tick, 1);
+    rc.handle();//把最近接收到的数据解码为摇杆和拨杆状态
+    controlLoop();//处理机器人模式，准备机械臂目标
+    allMotorsHandle();//根据目标和反馈计算电机输出
+    osDelayUntil(&tick, 1);//等待下一个周期，目标为周期1ms
   }
 }
 
 
 osThreadId canTaskHandle;
+//把最新输出打包发送
 void canTask(void const* argument) {
   canFilterInit();
   for (;;) {

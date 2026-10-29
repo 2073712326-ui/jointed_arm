@@ -58,16 +58,17 @@ uint8_t arm_step = 0;  // 0 空闲，1 预备，2~5 依次走向 B、C、D、A
 volatile bool arm_start_ok = false;  // 最近一次轨迹是否启动成功
 
 // 控制初始化
+// 设置遥控器串口参数、初始化LED、设置整机初始状态
 void controlInit(void) {
-  (RC_UART)->Init.BaudRate = 100000;
-  (RC_UART)->Init.WordLength = UART_WORDLENGTH_9B;
+  (RC_UART)->Init.BaudRate = 100000;//波特率
+  (RC_UART)->Init.WordLength = UART_WORDLENGTH_9B;//字长配置
 #ifdef RF206S
   (RC_UART)->Init.StopBits = UART_STOPBITS_2;
 #endif
 #ifdef DR16
   (RC_UART)->Init.StopBits = UART_STOPBITS_1;
 #endif
-  (RC_UART)->Init.Parity = UART_PARITY_EVEN;
+  (RC_UART)->Init.Parity = UART_PARITY_EVEN;//偶校验
   (RC_UART)->Init.Mode = UART_MODE_RX;
   (RC_UART)->Init.HwFlowCtl = UART_HWCONTROL_NONE;
   (RC_UART)->Init.OverSampling = UART_OVERSAMPLING_16;
@@ -96,15 +97,17 @@ void controlLoop(void) {
 }
 
 // IWDG处理，true持续刷新，false进入STOP状态并停止刷新
+// 遥控在线石喂狗，掉线时进入STOP并停止喂狗
 void iwdgHandler(bool iwdg_refresh_flag) {
   if (!iwdg_refresh_flag) {
-    robot_state = STOP;
+    robot_state = STOP;//遥控掉线，STOP，并停止刷新看门狗
   } else {
-    HAL_IWDG_Refresh(&hiwdg);
+    HAL_IWDG_Refresh(&hiwdg);//遥控在线，持续刷新看门狗
   }
 }
 
 // STOP(断电，安全模式)/开机/正常运行 状态机
+// 管理STOP、STARTUP、WORKING转换
 void robotPowerStateFSM(bool stop_flag) {
   if (robot_state == STOP) {
     if (!stop_flag) {
@@ -125,6 +128,7 @@ void robotPowerStateFSM(bool stop_flag) {
 }
 
 // 重置各功能状态
+// 清除动作状态，并调用arm.disable()
 void robotReset(void) {
   robot_init_flag = false;
   arm_step = 0;
@@ -134,6 +138,7 @@ void robotReset(void) {
 }
 
 // 开机上电启动处理
+// 当前直接返回true，没有实质启动检查
 bool robotStartup(void) {
   bool flag = true;
 
@@ -141,10 +146,17 @@ bool robotStartup(void) {
 }
 
 // 机器人控制
+// 当前为空，遥控业务逻辑尚未实现
 void robotControl(void) {
+  
+
+
+
+
 }
 
 // 板载LED指示灯效果
+// 根据状态和拨杆位置显示LED效果
 void boardLedHandle(void) {
 #ifdef DBC
   if (robot_state == STOP) {

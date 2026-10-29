@@ -11,6 +11,7 @@
 
 #include "app/motor_monitor.h"
 #include "lib/arm_math/arm_math.h"
+#include <cmath>
 
 // Motor parameter config
 // 电机参数配置

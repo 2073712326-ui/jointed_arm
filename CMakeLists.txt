@@ -75,7 +75,8 @@ add_library(interface STATIC ${interface_src})
 target_link_libraries(interface ${libs} ${mcu}_driver base app)
 
 # executable file(.elf .hex .bin)
-add_executable(${PROJECT_NAME}.elf ${mcu_src} ${interface_src} ${linker_scrpit})
+add_executable(${PROJECT_NAME}.elf ${mcu_src} ${interface_src} ${linker_scrpit}
+        training/student/interface/robot.h)
 target_link_libraries(${PROJECT_NAME}.elf ${libs} ${mcu}_driver interface)
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)

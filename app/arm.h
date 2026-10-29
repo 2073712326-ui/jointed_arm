@@ -13,34 +13,36 @@ class Arm {
  public:
   struct State {
     float q[2]{};   // rad，J1 为相对前一连杆的角度
-    float dq[2]{};  // rad/s
+    float dq[2]{};  // 实际关节速度（rad/s）
   };
 
   struct Reference {
-    float q[2]{};    // rad
+    float q[2]{};    // rad，目标位置
     float dq[2]{};   // rad/s，速度前馈
     float ddq[2]{};  // rad/s²，加速度前馈
   };
 
+  //保存两个关节的角度上下限
   struct Limits {
     float q_min[2];  // rad
     float q_max[2];  // rad
   };
-
+  //表示把关节目标加速度转换成输出指令的系数
   struct Feedforward {
     float k_acc[2];  // 输出指令 / (rad/s²)
   };
 
-  enum class Mode { Disabled, Joint };
+  enum class Mode { Disabled, Joint };//表示机械臂是否处于允许关节控制的状态
 
   Arm(Motor& joint0, Motor& joint1, const Limits& limits,
       const Feedforward& feedforward);
 
   // 仅失能且反馈有效时按已知姿态标定
-  bool calibrate(float q0_rad, float q1_rad);
+  //建立软件角度和机械姿态的对应关系
+  bool calibrate(float q0_rad, float q1_rad);//按已知机械姿态建立关节角度零点
   // 以当前位置为目标使能
-  bool enable();
-  void disable();
+  bool enable();//以当前位置作为初始目标，进入可控制状态
+  void disable();//停止动作并使两个关节失能
   // 轨迹中拒绝外部参考；越限返回 false
   bool setReference(const Reference& reference);
   // 手动关节速度输入，内部积分并处理限位；单位 rad/s、s
@@ -63,14 +65,14 @@ class Arm {
   bool calibrated() const { return calibrated_; }
 
  private:
-  enum class TrajectoryType { None, Cartesian, Joint };
-  bool feedbackReady();
-  bool trajectoryReady();
-  bool withinLimits(const float q[2]) const;
+  enum class TrajectoryType { None, Cartesian, Joint };//表示当前是否正在执行轨迹，以及轨迹属于哪种空间
+  bool feedbackReady();//检查两电机反馈是否可用于控制
+  bool trajectoryReady();//检查能否开始轨迹
+  bool withinLimits(const float q[2]) const;//检查两个关节角是否都在限位内
   bool applyReference(const Reference& reference);
-  void updateFeedback();
-  void trajectoryPlanner();
-  void writeMotorCommands();
+  void updateFeedback();//从Motor获取反馈并转换到Arm单位
+  void trajectoryPlanner();//根据经过时间生成本周期轨迹参考
+  void writeMotorCommands();//把参考写给两个Motor
 
   Motor& joint0_;
   Motor& joint1_;
@@ -79,7 +81,7 @@ class Arm {
   State state_{};
   Reference reference_{};
   Mode mode_{Mode::Disabled};
-  bool calibrated_{false};
+  bool calibrated_{false};//按已知机械姿态建立关节角度零点
   ArmTrajectory trajectory_{};
   TrajectoryType trajectory_type_{TrajectoryType::None};
   bool trajectory_finished_{false};

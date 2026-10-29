@@ -106,7 +106,7 @@ void RC::handle(void) {
 
 // Update connect status, restart UART(SBUS) receive.
 // 更新连接状态，重新打开UART(SBUS)接收
-void RC::rxCallback(void) {
+void RC::rxCallback(void) {//判断是不是遥控器使用的串口
   rx_len_++;
   if (huart_ != nullptr) {
     HAL_UART_Receive_DMA(huart_, rx_buf_ + rx_len_, 1);
