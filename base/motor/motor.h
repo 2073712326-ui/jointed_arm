@@ -121,7 +121,7 @@ class Motor {
     float max_intensity;  // 控制信号限幅
   } info_;
 
-  Connect connect_;
+  Connect connect_;//在线连接状态
   Motor::Mode_e mode_;
   Motor::ControlMethod_e method_;
   float ratio_;  // 减速比

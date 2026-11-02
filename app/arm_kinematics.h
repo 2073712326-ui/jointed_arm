@@ -20,7 +20,7 @@ class ArmKinematics {
   // elbow 为 +1/-1；q 展开到 previous_q 附近的圈数
   static bool inverse(const CartesianReference& position,
                       const float previous_q[2], int elbow, float q[2]);
-  static bool derivatives(const CartesianReference& point, const float q[2],
+  static bool derivatives(const CartesianReference& position, const float q[2],
                           float dq[2], float ddq[2]);
 };
 

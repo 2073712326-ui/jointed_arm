@@ -15,6 +15,11 @@ CartesianReference ArmKinematics::forward(const float q[2]) {
 
 bool ArmKinematics::inverse(const CartesianReference& position, const float previous_q[2] ,
                            int elbow, float q[2]) {
+  //检查elbow的值
+  if (elbow != 1 && elbow != -1) {
+    return false;
+  }
+
   const float x = position.x;
   const float y = position.y;
   const float r = x * x + y * y;
@@ -85,7 +90,7 @@ bool ArmKinematics::lineReachable(const CartesianReference& start,const Cartesia
 
 
 
-bool ArmKinematics::derivatives(const CartesianReference&, const float[2],
-                               float[2], float[2]) {
+bool ArmKinematics::derivatives(const CartesianReference& position, const float q[2],float dq[2], float ddq[2]) {
+
   return false;
 }
