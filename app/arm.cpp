@@ -73,12 +73,103 @@ bool Arm::calibrate(float q0_rad, float q1_rad) {
   calibrated_ = true;
   return true;
 }
-
+//检查能否使能，把目标同步到当前位置，然后再让两个电机进入工作状态
 bool Arm::enable() {
-  return false;
+  if (calibrated_ == false) {
+    return false;
+  }
+  if (!feedbackReady()) {
+    return false;
+  }
+  if (mode_ == Mode::Joint) {
+    return true;
+  }
+
+  updateFeedback();
+
+  if (!withinLimits(state_.q)) {
+    return false;
+  }
+
+  reference_.q[0] = state_.q[0];
+  reference_.q[1] = state_.q[1];
+  reference_.dq[0] = 0.0f;
+  reference_.dq[1] = 0.0f;
+  reference_.ddq[0] = 0.0f;
+  reference_.ddq[1] = 0.0f;
+
+  trajectory_.abort();//停止笛卡尔轨迹对象
+  trajectory_type_ = TrajectoryType::None;//机械臂当前没有执行任何轨迹
+  trajectory_finished_ = false;//清除完成标志
+
+  //重置两个电机的PID历史数据
+  joint0_.ppid_.reset();  // J0 位置环
+  joint0_.spid_.reset();  // J0 速度环
+
+  joint1_.ppid_.reset();  // J1 位置环
+  joint1_.spid_.reset();  // J1 速度环
+
+  //设置两个电机为POSITION_SPEED控制方式
+  joint0_.method_ = Motor::POSITION_SPEED;
+  joint1_.method_ = Motor::POSITION_SPEED;
+
+  //先写入点击目标，角度转为deg，两个前馈均为零
+  joint0_.setAngleSpeed(math::rad2deg(reference_.q[0]), 0.0f, 0.0f);
+  joint1_.setAngleSpeed(math::rad2deg(reference_.q[1]), 0.0f, 0.0f);
+  //进入工作状态
+  joint0_.mode_ = Motor::WORKING;
+  joint1_.mode_ = Motor::WORKING;
+  mode_ = Mode::Joint;
+  return true;
 }
 
 void Arm::disable() {
+  mode_ = Mode::Disabled;
+  trajectory_.abort();//停止笛卡尔轨迹对象
+  trajectory_type_ = TrajectoryType::None;//机械臂当前没有执行任何轨迹
+  trajectory_finished_ = false;
+
+  reference_.dq[0] = 0.0f;
+  reference_.dq[1] = 0.0f;
+  reference_.ddq[0] = 0.0f;
+  reference_.ddq[1] = 0.0f;
+  //将两个电机切换为Motor::POWEROFF
+  if (joint0_.mode_ != Motor::INIT ) {
+    joint0_.mode_ = Motor::POWEROFF;
+  }
+  if (joint1_.mode_ != Motor::INIT ) {
+    joint1_.mode_ = Motor::POWEROFF;
+  }
+
+  //清零两个电机的输出
+  joint0_.intensity_ = 0.0f;
+  joint0_.intensity_float_ = 0.0f;
+  joint1_.intensity_ = 0.0f;
+  joint1_.intensity_float_ = 0.0f;
+
+  //清除两个电机的前馈
+  joint0_.control_data_.feedforward_speed = 0.0f;
+  joint0_.control_data_.feedforward_intensity = 0.0f;
+  joint1_.control_data_.feedforward_intensity = 0.0f;
+  joint1_.control_data_.feedforward_speed = 0.0f
+
+  //重置两个电机的PID
+  joint0_.ppid_.reset();
+  joint0_.spid_.reset();
+  joint1_.ppid_.reset();
+  joint1_.spid_.reset();
+
+
+
+ 
+
+
+
+
+
+
+
+
 }
 
 bool Arm::setReference(const Reference&) {
