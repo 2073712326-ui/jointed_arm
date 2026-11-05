@@ -25,7 +25,9 @@ bool ArmKinematics::inverse(const CartesianReference& position, const float prev
   const float r = x * x + y * y;
 
   float cos_q1 =  (r - l0 * l0 - l1 * l1) /( 2.0f * l0 * l1 );
-  if (cos_q1 > 1.0f || cos_q1 < -1.0f) {
+  const float tolerance = 1e-5f;
+
+  if (cos_q1 > 1.0f + tolerance  || cos_q1 < -1.0f - tolerance) {
     return false;
   }
   if (cos_q1 > 1.0f) {

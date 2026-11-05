@@ -162,7 +162,7 @@ void Arm::disable() {
   joint1_.ppid_.reset();
   joint1_.spid_.reset();
 }
-
+//外部入口，轨迹运行时拒绝外部覆盖（外部输入）
 bool Arm::setReference(const Reference& reference) {
   if (trajRunning()) {
     return false;
@@ -170,7 +170,7 @@ bool Arm::setReference(const Reference& reference) {
   return applyReference(reference);
 }
 
-
+//内部公共入口，检查都保存目标(轨迹规划）
 bool Arm::applyReference(const Reference& reference) {
   if (mode_ != Mode::Joint) {
     return false;

@@ -148,11 +148,161 @@ bool robotStartup(void) {
 // 机器人控制
 // 当前为空，遥控业务逻辑尚未实现
 void robotControl(void) {
-  
+  //识别当前和挡位切换
+  // 标定挡位：左中右中
+  const bool calibration_mode =
+      rc.switch_.l == decltype(rc)::MID &&
+      rc.switch_.r == decltype(rc)::MID;
 
+  // 手动挡位：左上右上
+  const bool manual_mode =
+      rc.switch_.l == decltype(rc)::UP &&
+      rc.switch_.r == decltype(rc)::UP;
 
+  // 正方形挡位：左中右上
+  const bool square_mode =
+      rc.switch_.l == decltype(rc)::MID &&
+      rc.switch_.r == decltype(rc)::UP;
 
+  //当前在正方形挡位，上一周期不在：说明刚刚进入
+  const bool was_square_mode =
+    last_rc_switch.l == decltype(rc)::MID &&
+    last_rc_switch.r == decltype(rc)::UP;
 
+  const bool entered_square = square_mode && !was_square_mode;
+
+  //左中右中：失能、清除动作状态、按伸直姿态标定
+  if (calibration_mode) {
+    arm.disable();
+    arm_step = 0;
+    arm_start_ok = false;
+    if (!arm.calibrated()) {
+      arm.calibrate(0.0f, 0.0f);
+    }
+  }
+  // 左上右上：使能，按摇杆速度更新两个关节目标
+  else if (manual_mode) {
+    arm.trajAbort();
+    arm_step = 0;
+    arm_start_ok = false;
+    if (arm.enable()) {
+      float input0 = rc.channel_.l_col;
+      float input1 = rc.channel_.r_col;
+      //摇杆死区
+      input0 = math::deadBand(input0, -20.0f, 20.0f);
+      input1 = math::deadBand(input1, -20.0f, 20.0f);
+
+      float speed0 = input0 / 660.0f * 0.3f;
+      float speed1 = input1 / 660.0f * 0.3f;
+
+      arm.addJointReference(speed0, speed1, 0.001f);
+    }
+
+  }
+  // 左中右上：触发一次预备动作，然后依次走正方形
+  else if (square_mode) {
+    //刚切入时：启动预备动作
+    if (entered_square) {
+      arm.trajAbort();
+      arm_step = 0;
+      arm_start_ok = false;
+
+      if (arm.enable()) {
+        CartesianReference position_a{};
+        position_a.x = 0.07f;
+        position_a.y = 0.07f;
+        //保存A点对应的两个目标关节角
+        float target_q[2]{};
+
+        //对A点求正肘支逆解
+        if (ArmKinematics::inverse(position_a, arm.state().q, 1, target_q)) {
+          arm_start_ok = arm.trajStartJoint(target_q[0], target_q[1], 2.0f);
+
+          if (arm_start_ok == true) {
+            arm_step = 1;
+          }
+        }
+      }
+    }
+
+    // 每个周期检查当前段是否结束，再衔接下一段。
+    if (arm_step != 0 && !arm.trajRunning()) {
+      if (!arm.trajFinished()) {
+        arm.trajAbort();
+        arm_step = 0;
+        arm_start_ok = false;
+      } else {
+        switch (arm_step) {
+          case 1: {
+            CartesianReference position_b{};
+            position_b.x = 0.07f;
+            position_b.y = -0.07f;
+            arm_start_ok = arm.trajStart(position_b.x, position_b.y, 2.0f);
+            if (arm_start_ok == true) {
+              arm_step = 2;
+            } else {
+              arm.trajAbort();
+              arm_step = 0;
+            }
+            break;
+          }
+          case 2: {
+            CartesianReference position_c{};
+            position_c.x = -0.07f;
+            position_c.y = -0.07f;
+            arm_start_ok = arm.trajStart(position_c.x, position_c.y, 2.0f);
+            if (arm_start_ok == true) {
+              arm_step = 3;
+            } else {
+              arm.trajAbort();
+              arm_step = 0;
+            }
+            break;
+          }
+          case 3: {
+            CartesianReference position_d{};
+            position_d.x = -0.07f;
+            position_d.y = 0.07f;
+            arm_start_ok = arm.trajStart(position_d.x, position_d.y, 2.0f);
+            if (arm_start_ok == true) {
+              arm_step = 4;
+            } else {
+              arm.trajAbort();
+              arm_step = 0;
+            }
+            break;
+          }
+          case 4: {
+            arm_start_ok = arm.trajStart(0.07f, 0.07f, 2.0f);
+            if (arm_start_ok == true) {
+              arm_step = 5;
+            } else {
+              arm.trajAbort();
+              arm_step = 0;
+            }
+            break;
+          }
+          case 5: {
+            arm_step = 0;
+            break;
+          }
+          default: {
+            arm.trajAbort();
+            arm_step = 0;
+            arm_start_ok = false;
+            break;
+          }
+        }
+      }
+    }
+  }
+  // 其余挡位：取消动作，保持位置目标，清除运动前馈
+  else {
+    arm.trajAbort();
+    arm_step = 0;
+    arm_start_ok = false;
+  }
+  last_rc_switch = rc.switch_;
 }
 
 // 板载LED指示灯效果
